@@ -75,3 +75,8 @@ DerivedDataCache/*
 
 # Rider stuff
 Plugins/*/RiderLink/*
+
+# Content I don't want to push
+Content/ExampleContent/*
+Content/ParagonGideon/*
+Content/ParagonMinions/*
