@@ -22,10 +22,18 @@ protected:
 	class UParticleSystemComponent* ParticleSystemComp;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
 	class UParticleSystem* HitParticleSystem;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Lifetime")
+	float ProjectileLifetimeSeconds = 0.f;
 	
+	UFUNCTION(BlueprintCallable)
+	void DestroyProjectile();
 	UFUNCTION()
-	void OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	virtual void OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 	
 	virtual void BeginPlay() override;
+
+private:
+	FTimerHandle DestroyTimerHandle;
 
 };

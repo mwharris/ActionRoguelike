@@ -72,10 +72,16 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 			UE_LOG(LogTemp, Error, TEXT("PrimaryAttackAction not set!"));
 		}
 
-		if (InteractAction != nullptr) {
+		if (UltimateAttackAction != nullptr) {
 			Input->BindAction(UltimateAttackAction, ETriggerEvent::Started, this, &ASCharacter::PlayUltimateAttackAnim);
 		} else {
 			UE_LOG(LogTemp, Error, TEXT("UltimateAttackAction not set!"));
+		}
+
+		if (TeleportAction != nullptr) {
+			Input->BindAction(TeleportAction, ETriggerEvent::Started, this, &ASCharacter::PlayTeleportAttackAnim);
+		} else {
+			UE_LOG(LogTemp, Error, TEXT("TeleportAction not set!"));
 		}
 		
 		if (JumpAction != nullptr) {
@@ -135,6 +141,16 @@ void ASCharacter::PlayUltimateAttackAnim(const FInputActionValue& Value)
 void ASCharacter::FireUltimateAttack()
 {
 	SpawnProjectile(UltimateProjectileClass);
+}
+
+void ASCharacter::PlayTeleportAttackAnim(const FInputActionValue& Value)
+{
+	PlayAnimMontage(TeleportAttackAnim);
+}
+
+void ASCharacter::FireTeleportProjectile()
+{
+	SpawnProjectile(TeleportProjectileClass);
 }
 
 void ASCharacter::SpawnProjectile(TSubclassOf<ASProjectile> ProjectileToSpawn)

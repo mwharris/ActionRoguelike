@@ -33,6 +33,11 @@ void ASProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	SphereComp->IgnoreActorWhenMoving(GetInstigator(), true);
+	// If Lifetime is 0 then allow the projectile to manage it's own lifetime
+	if (ProjectileLifetimeSeconds > 0.f)
+	{
+		GetWorldTimerManager().SetTimer(DestroyTimerHandle, this, &ASProjectile::DestroyProjectile, 1.0f, false, ProjectileLifetimeSeconds);
+	}
 }
 
 void ASProjectile::OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -43,6 +48,14 @@ void ASProjectile::OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 	{
 		return;
 	}
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticleSystem, GetActorLocation(), GetActorRotation());
+	DestroyProjectile();
+}
+
+void ASProjectile::DestroyProjectile()
+{
+	if (HitParticleSystem != nullptr)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticleSystem, GetActorLocation(), GetActorRotation());	
+	}
 	Destroy();
 }
