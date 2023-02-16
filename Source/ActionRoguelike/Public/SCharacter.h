@@ -13,9 +13,10 @@ class ACTIONROGUELIKE_API ASCharacter : public ACharacter
 public:
 	UFUNCTION(BlueprintCallable)
 	void FirePrimaryAttack();
+	UFUNCTION(BlueprintCallable)
+	void FireUltimateAttack();
 	
 	ASCharacter();
-	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
@@ -34,6 +35,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Controls|Input Actions")
 	class UInputAction* PrimaryAttackAction;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Controls|Input Actions")
+	class UInputAction* UltimateAttackAction;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Controls|Input Actions")
 	class UInputAction* JumpAction;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Controls|Input Actions")
 	class UInputAction* InteractAction;
@@ -42,16 +45,24 @@ protected:
 	class UInputMappingContext* BaseMappingContext;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Attacks")
-	TSubclassOf<class ASMagicProjectile> ProjectileClass;
+	TSubclassOf<class ASProjectile> PrimaryProjectileClass;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Attacks")
+	TSubclassOf<class ASProjectile> UltimateProjectileClass;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Attacks")
 	UAnimMontage* PrimaryAttackAnim;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Attacks")
+	UAnimMontage* UltimateAttackAnim;
 	
 	virtual void BeginPlay() override;
-	void MoveForward(float Value);
 
 	void EnhancedMove(const FInputActionValue& Value);
 	void EnhancedLook(const FInputActionValue& Value);
 	void PlayPrimaryAttackAnim(const FInputActionValue& Value);
 	void PrimaryInteract(const FInputActionValue& Value);
+	void PlayUltimateAttackAnim(const FInputActionValue& Value);
 
+private:
+	bool PerformAttackLineTrace(FHitResult& OutHitResult) const;
+	void SpawnProjectile(TSubclassOf<class ASProjectile> ProjectileToSpawn);
+	
 };

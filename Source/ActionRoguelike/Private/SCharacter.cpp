@@ -5,11 +5,11 @@
 #include "SInteractionComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "SMagicProjectile.h"
+#include "SProjectile.h"
 
 ASCharacter::ASCharacter()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>("Spring Arm Comp");
 	SpringArmComp->bUsePawnControlRotation = true;
@@ -71,6 +71,12 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		} else {
 			UE_LOG(LogTemp, Error, TEXT("PrimaryAttackAction not set!"));
 		}
+
+		if (InteractAction != nullptr) {
+			Input->BindAction(UltimateAttackAction, ETriggerEvent::Started, this, &ASCharacter::PlayUltimateAttackAnim);
+		} else {
+			UE_LOG(LogTemp, Error, TEXT("UltimateAttackAction not set!"));
+		}
 		
 		if (JumpAction != nullptr) {
 			Input->BindAction(JumpAction, ETriggerEvent::Started, this, &ASCharacter::Jump);
@@ -86,11 +92,6 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		}
 	}
 } 
-
-void ASCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
 
 // Value is an Axis2D where index 0 is X-Axis and index 1 is Y-Axis
 void ASCharacter::EnhancedMove(const FInputActionValue& Value)
@@ -123,8 +124,31 @@ void ASCharacter::PlayPrimaryAttackAnim(const FInputActionValue& Value)
 
 void ASCharacter::FirePrimaryAttack()
 {
-	const FVector SpawnLocation = GetMesh()->GetSocketLocation("Muzzle_01") + (GetControlRotation().Vector() * 100.f);
-	const FTransform SpawnTransform = FTransform(GetControlRotation(), SpawnLocation);
+	SpawnProjectile(PrimaryProjectileClass);
+}
+
+void ASCharacter::PlayUltimateAttackAnim(const FInputActionValue& Value)
+{
+	PlayAnimMontage(UltimateAttackAnim);	
+}
+
+void ASCharacter::FireUltimateAttack()
+{
+	SpawnProjectile(UltimateProjectileClass);
+}
+
+void ASCharacter::SpawnProjectile(TSubclassOf<ASProjectile> ProjectileToSpawn)
+{
+	// Determine rotation using the camera's location and view rotation
+	FRotator SpawnRotation = GetControlRotation();
+	FHitResult HitResult;
+	if (PerformAttackLineTrace(HitResult))
+	{
+		SpawnRotation = (HitResult.ImpactPoint - GetMesh()->GetSocketLocation("Muzzle_01")).Rotation();
+	}
+	
+	const FVector SpawnLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	const FTransform SpawnTransform = FTransform(SpawnRotation, SpawnLocation);
 
 	FActorSpawnParameters SpawnParameters;
 	SpawnParameters.Owner = this;
@@ -132,7 +156,19 @@ void ASCharacter::FirePrimaryAttack()
 	// Overrides the default collision detection when spawning this actor
 	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	
-	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTransform, SpawnParameters);
+	GetWorld()->SpawnActor<AActor>(ProjectileToSpawn, SpawnTransform, SpawnParameters);
+}
+
+bool ASCharacter::PerformAttackLineTrace(FHitResult& OutHitResult) const
+{
+	FCollisionObjectQueryParams ObjectQueryParams;
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
+
+	const FVector Location = CameraComp->GetComponentLocation();
+	const FVector End = Location + (CameraComp->GetForwardVector() * 5000.f);
+
+	return GetWorld()->LineTraceSingleByObjectType(OutHitResult, Location, End, ObjectQueryParams);
 }
 
 void ASCharacter::PrimaryInteract(const FInputActionValue& Value)

@@ -11,7 +11,7 @@ class ACTIONROGUELIKE_API ASExplosiveBarrel : public AActor
 	
 public:	
 	ASExplosiveBarrel();
-	virtual void PostInitializeComponents();
+	virtual void PostInitializeComponents() override;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
