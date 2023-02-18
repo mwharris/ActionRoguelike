@@ -23,13 +23,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
 	class UParticleSystem* HitParticleSystem;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Lifetime")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Projectile Properties")
 	float ProjectileLifetimeSeconds = 0.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Projectile Properties")
+	float DamageDelta = 0.f;
 	
 	UFUNCTION(BlueprintCallable)
 	void DestroyProjectile();
 	UFUNCTION()
-	virtual void OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	virtual void OnComponentOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	
 	virtual void BeginPlay() override;
 

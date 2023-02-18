@@ -2,6 +2,7 @@
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "SAttributeComponent.h"
 #include "SInteractionComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -18,7 +19,9 @@ ASCharacter::ASCharacter()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>("Camera Comp");
 	CameraComp->SetupAttachment(SpringArmComp);
 
+	// ActorComponents
 	InteractionComp = CreateDefaultSubobject<USInteractionComponent>("Interaction Component");
+	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("Attribute Component");
 
 	// Ignore the controller's yaw rotation
 	bUseControllerRotationYaw = false;
@@ -155,6 +158,11 @@ void ASCharacter::FireTeleportProjectile()
 
 void ASCharacter::SpawnProjectile(TSubclassOf<ASProjectile> ProjectileToSpawn)
 {
+	if (ProjectileToSpawn == nullptr)
+	{
+		return;
+	}
+	
 	// Determine rotation using the camera's location and view rotation
 	FRotator SpawnRotation = GetControlRotation();
 	FHitResult HitResult;

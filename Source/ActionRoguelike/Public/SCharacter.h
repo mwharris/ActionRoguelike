@@ -22,13 +22,14 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Camera")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
 	class USpringArmComponent* SpringArmComp;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Camera")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
 	class UCameraComponent* CameraComp;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Interactions")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
 	class USInteractionComponent* InteractionComp;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
+	class USAttributeComponent* AttributeComp;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Controls|Input Actions")
 	class UInputAction* MovementAction;

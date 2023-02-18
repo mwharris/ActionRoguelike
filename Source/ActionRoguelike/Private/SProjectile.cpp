@@ -1,5 +1,6 @@
 #include "SProjectile.h"
 
+#include "SAttributeComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -26,7 +27,7 @@ ASProjectile::ASProjectile()
 void ASProjectile::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-	SphereComp->OnComponentHit.AddDynamic(this, &ASProjectile::OnComponentHit);
+	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &ASProjectile::OnComponentOverlap);
 }
 
 void ASProjectile::BeginPlay()
@@ -40,13 +41,21 @@ void ASProjectile::BeginPlay()
 	}
 }
 
-void ASProjectile::OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-                                  FVector NormalImpulse, const FHitResult& Hit)
+void ASProjectile::OnComponentOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	// Ignore us hitting the actor that spawned us
 	if (GetInstigator() == OtherActor)
 	{
 		return;
+	}
+	// Damage a hit actor if valid
+	if (OtherActor != nullptr && DamageDelta != 0.f)
+	{
+		USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
+		if (AttributeComponent != nullptr)
+		{
+			AttributeComponent->ApplyHealthChange(DamageDelta);
+		}
 	}
 	DestroyProjectile();
 }

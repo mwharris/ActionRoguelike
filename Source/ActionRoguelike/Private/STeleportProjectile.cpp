@@ -16,8 +16,7 @@ void ASTeleportProjectile::BeginPlay()
 	GetWorldTimerManager().SetTimer(ExplodeTimerHandle, this, &ASTeleportProjectile::TriggerExplosion, 1.0f, false, ExplodeDelayTimeSeconds);
 }
 
-void ASTeleportProjectile::OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
-                                          UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void ASTeleportProjectile::OnComponentOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	// Immediately trigger the explosion if we hit something
 	GetWorldTimerManager().ClearTimer(ExplodeTimerHandle);
