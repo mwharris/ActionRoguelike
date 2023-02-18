@@ -28,6 +28,7 @@ void ASProjectile::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &ASProjectile::OnComponentOverlap);
+	SphereComp->OnComponentHit.AddDynamic(this, &ASProjectile::OnComponentHit);
 }
 
 void ASProjectile::BeginPlay()
@@ -57,6 +58,12 @@ void ASProjectile::OnComponentOverlap(UPrimitiveComponent* OverlappedComp, AActo
 			AttributeComponent->ApplyHealthChange(DamageDelta);
 		}
 	}
+	DestroyProjectile();
+}
+
+void ASProjectile::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	FVector NormalImpulse, const FHitResult& Hit)
+{
 	DestroyProjectile();
 }
 

@@ -24,4 +24,8 @@ protected:
 	UFUNCTION()
 	void OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
+private:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Damage", meta=(AllowPrivateAccess=true))
+	float DamageDelta = -50.f;
+	
 };

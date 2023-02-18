@@ -1,5 +1,6 @@
 #include "SExplosiveBarrel.h"
 
+#include "SAttributeComponent.h"
 #include "Components/BoxComponent.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 
@@ -33,6 +34,15 @@ void ASExplosiveBarrel::BeginPlay()
 void ASExplosiveBarrel::OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
+	// Damage the player if they walked into us
+	if (OtherActor != nullptr)
+	{
+		USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
+		if (AttributeComp != nullptr)
+		{
+			AttributeComp->ApplyHealthChange(DamageDelta);
+		}
+	}
 	RadialForceComp->FireImpulse();
 }
 

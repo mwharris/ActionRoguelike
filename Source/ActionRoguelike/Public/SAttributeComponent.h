@@ -16,16 +16,14 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnHealthChanged OnHealthChanged;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
+	float Health = 100.f;
 
 	UFUNCTION(BlueprintCallable, Category="Attributes")
 	bool ApplyHealthChange(float Delta);
 
 protected:
 	virtual void BeginPlay() override;
-
-private:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes", meta=(AllowPrivateAccess=true))
-	float Health = 100.f;
 
 	// TODO: MaxHealth, Stamina, Strength, etc...
 
