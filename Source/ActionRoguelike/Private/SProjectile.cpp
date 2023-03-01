@@ -42,6 +42,12 @@ void ASProjectile::BeginPlay()
 	}
 }
 
+void ASProjectile::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	FVector NormalImpulse, const FHitResult& Hit)
+{
+	DestroyProjectile();
+}
+
 void ASProjectile::OnComponentOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	// Ignore us hitting the actor that spawned us
@@ -58,12 +64,6 @@ void ASProjectile::OnComponentOverlap(UPrimitiveComponent* OverlappedComp, AActo
 			AttributeComponent->ApplyHealthChange(DamageDelta);
 		}
 	}
-	DestroyProjectile();
-}
-
-void ASProjectile::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	FVector NormalImpulse, const FHitResult& Hit)
-{
 	DestroyProjectile();
 }
 

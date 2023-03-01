@@ -11,7 +11,6 @@ class ACTIONROGUELIKE_API ASProjectile : public AActor
 	
 public:	
 	ASProjectile();
-	virtual void PostInitializeComponents() override;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
@@ -36,6 +35,7 @@ protected:
 	virtual void OnComponentOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	
 	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
 
 private:
 	FTimerHandle DestroyTimerHandle;
