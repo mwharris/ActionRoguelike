@@ -41,7 +41,11 @@ void ASTeleportProjectile::TriggerTeleport()
 {
 	GetWorldTimerManager().ClearTimer(TeleportTimerHandle);
 	// Teleport the character to our hit location
-	GetInstigator()->TeleportTo(GetActorLocation(), GetActorRotation());
+	APawn* OwnerInstigator = GetInstigator();
+	if (OwnerInstigator != nullptr)
+	{
+		OwnerInstigator->TeleportTo(GetActorLocation(), OwnerInstigator->GetActorRotation());
+	}
 	// Destroy ourselves
 	Destroy();
 }

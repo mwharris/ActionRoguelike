@@ -72,7 +72,7 @@ protected:
 	void PlayTeleportAttackAnim(const FInputActionValue& Value);
 
 private:
-	bool PerformAttackLineTrace(FHitResult& OutHitResult) const;
+	bool PerformAttackTrace(FHitResult& OutHitResult) const;
 	void SpawnProjectile(TSubclassOf<class ASProjectile> ProjectileToSpawn);
 	
 };

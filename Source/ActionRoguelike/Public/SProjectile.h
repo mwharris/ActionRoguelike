@@ -26,6 +26,8 @@ protected:
 	float ProjectileLifetimeSeconds = 0.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Projectile Properties")
 	float DamageDelta = 0.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Projectile Properties")
+	bool DestroyOnOverlap = true;
 	
 	UFUNCTION(BlueprintCallable)
 	void DestroyProjectile();

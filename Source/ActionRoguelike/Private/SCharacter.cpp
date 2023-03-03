@@ -166,7 +166,7 @@ void ASCharacter::SpawnProjectile(TSubclassOf<ASProjectile> ProjectileToSpawn)
 	// Determine rotation using the camera's location and view rotation
 	FRotator SpawnRotation = GetControlRotation();
 	FHitResult HitResult;
-	if (PerformAttackLineTrace(HitResult))
+	if (PerformAttackTrace(HitResult))
 	{
 		SpawnRotation = (HitResult.ImpactPoint - GetMesh()->GetSocketLocation("Muzzle_01")).Rotation();
 	}
@@ -183,16 +183,23 @@ void ASCharacter::SpawnProjectile(TSubclassOf<ASProjectile> ProjectileToSpawn)
 	GetWorld()->SpawnActor<AActor>(ProjectileToSpawn, SpawnTransform, SpawnParameters);
 }
 
-bool ASCharacter::PerformAttackLineTrace(FHitResult& OutHitResult) const
+bool ASCharacter::PerformAttackTrace(FHitResult& OutHitResult) const
 {
+	const FVector Start = CameraComp->GetComponentLocation();
+	const FVector End = Start + (CameraComp->GetForwardVector() * 5000.f);
+
 	FCollisionObjectQueryParams ObjectQueryParams;
 	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
 	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_Pawn);
 
-	const FVector Location = CameraComp->GetComponentLocation();
-	const FVector End = Location + (CameraComp->GetForwardVector() * 5000.f);
+	FCollisionShape Shape;
+	Shape.SetSphere(20.f);
 
-	return GetWorld()->LineTraceSingleByObjectType(OutHitResult, Location, End, ObjectQueryParams);
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+
+	return GetWorld()->SweepSingleByObjectType(OutHitResult, Start, End, FQuat::Identity, ObjectQueryParams, Shape, Params);
 }
 
 void ASCharacter::PrimaryInteract(const FInputActionValue& Value)

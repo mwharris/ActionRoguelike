@@ -64,14 +64,21 @@ void ASProjectile::OnComponentOverlap(UPrimitiveComponent* OverlappedComp, AActo
 			AttributeComponent->ApplyHealthChange(DamageDelta);
 		}
 	}
-	DestroyProjectile();
+	// We might not want to destroy a projectile on overlap (EX: black hole projectile)
+	if (DestroyOnOverlap)
+	{
+		DestroyProjectile();
+	}
 }
 
 void ASProjectile::DestroyProjectile()
 {
-	if (HitParticleSystem != nullptr)
+	if (!ensure(IsPendingKill()))
 	{
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticleSystem, GetActorLocation(), GetActorRotation());	
+		if (HitParticleSystem != nullptr)
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticleSystem, GetActorLocation(), GetActorRotation());
+		}	
+		Destroy();
 	}
-	Destroy();
 }
