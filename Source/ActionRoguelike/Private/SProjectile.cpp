@@ -1,6 +1,7 @@
 #include "SProjectile.h"
 
 #include "SAttributeComponent.h"
+#include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -16,6 +17,9 @@ ASProjectile::ASProjectile()
 
 	ParticleSystemComp = CreateDefaultSubobject<UParticleSystemComponent>("Particle System Component");
 	ParticleSystemComp->SetupAttachment(SphereComp);
+
+	AudioComp = CreateDefaultSubobject<UAudioComponent>("Audio Component");
+	AudioComp->SetupAttachment(SphereComp);
 	
 	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>("Projectile Movement Component");
 	MovementComp->InitialSpeed = 1000.f;
@@ -35,6 +39,11 @@ void ASProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	SphereComp->IgnoreActorWhenMoving(GetInstigator(), true);
+	// Start playing looping sound
+	if (IsValid(AudioComp->Sound))
+	{
+		AudioComp->Play();
+	}
 	// If Lifetime is 0 then allow the projectile to manage it's own lifetime
 	if (ProjectileLifetimeSeconds > 0.f)
 	{
@@ -45,7 +54,7 @@ void ASProjectile::BeginPlay()
 void ASProjectile::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
-	DestroyProjectile();
+	DestroyProjectile(true);
 }
 
 void ASProjectile::OnComponentOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -67,18 +76,31 @@ void ASProjectile::OnComponentOverlap(UPrimitiveComponent* OverlappedComp, AActo
 	// We might not want to destroy a projectile on overlap (EX: black hole projectile)
 	if (DestroyOnOverlap)
 	{
-		DestroyProjectile();
+		DestroyProjectile(true);
 	}
 }
 
 void ASProjectile::DestroyProjectile()
 {
+	DestroyProjectile(false);
+}
+
+void ASProjectile::DestroyProjectile(bool PlayHitSound)
+{
 	if (!ensure(IsPendingKill()))
 	{
+		AudioComp->Stop();
+		// Play hit particle FX
 		if (HitParticleSystem != nullptr)
 		{
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticleSystem, GetActorLocation(), GetActorRotation());
-		}	
+		}
+		// Play an impact sound if one is set
+		if (PlayHitSound && ImpactSound != nullptr)
+		{
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), ImpactSound, GetActorLocation(), GetActorRotation());
+		}
+		// Destroy ourselves
 		Destroy();
 	}
 }

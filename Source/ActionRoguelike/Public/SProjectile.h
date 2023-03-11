@@ -18,9 +18,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
 	class UProjectileMovementComponent* MovementComp;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
-	class UParticleSystemComponent* ParticleSystemComp;
+	UParticleSystemComponent* ParticleSystemComp;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
-	class UParticleSystem* HitParticleSystem;
+	UParticleSystem* HitParticleSystem;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
+	UAudioComponent* AudioComp;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Projectile Properties")
 	float ProjectileLifetimeSeconds = 0.f;
@@ -29,8 +31,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Projectile Properties")
 	bool DestroyOnOverlap = true;
 	
-	UFUNCTION(BlueprintCallable)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Audio")
+	USoundBase* ImpactSound;
+	
 	void DestroyProjectile();
+	UFUNCTION(BlueprintCallable)
+	void DestroyProjectile(bool PlayHitSound);
 	UFUNCTION()
 	virtual void OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 	UFUNCTION()

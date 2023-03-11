@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
+#include "SAttributeComponent.h"
 #include "GameFramework/Character.h"
 #include "SCharacter.generated.h"
 
@@ -61,8 +62,12 @@ protected:
 	UAnimMontage* UltimateAttackAnim;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Attacks")
 	UAnimMontage* TeleportAttackAnim;
+
+	UFUNCTION()
+	void OnHealthChanged(AActor* InstigatorActor, class USAttributeComponent* OwningComp, float NewHealth, float Delta);
 	
 	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
 
 	void EnhancedMove(const FInputActionValue& Value);
 	void EnhancedLook(const FInputActionValue& Value);
