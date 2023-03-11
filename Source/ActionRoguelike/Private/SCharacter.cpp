@@ -216,11 +216,13 @@ void ASCharacter::PrimaryInteract(const FInputActionValue& Value)
 void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth,
 	float Delta)
 {
-	if (NewHealth <= 0.f && Delta > 0.f)
+	if (Delta < 0.f)
 	{
-		APlayerController* PC = Cast<APlayerController>(GetController());
-		DisableInput(PC);
-
-		
+		GetMesh()->SetScalarParameterValueOnMaterials(FName("TimeToHit"), GetWorld()->GetTimeSeconds());
+		if (NewHealth <= 0.f && Delta < 0.f)
+		{
+			APlayerController* PC = Cast<APlayerController>(GetController());
+			DisableInput(PC);
+		}
 	}
 }
