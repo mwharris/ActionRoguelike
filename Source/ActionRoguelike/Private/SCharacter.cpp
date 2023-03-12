@@ -7,6 +7,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "SProjectile.h"
+#include "Kismet/GameplayStatics.h"
 
 ASCharacter::ASCharacter()
 {
@@ -185,8 +186,12 @@ void ASCharacter::SpawnProjectile(TSubclassOf<ASProjectile> ProjectileToSpawn)
 	SpawnParameters.Instigator = this;
 	// Overrides the default collision detection when spawning this actor
 	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	
+
+	// Spawn the projectile
 	GetWorld()->SpawnActor<AActor>(ProjectileToSpawn, SpawnTransform, SpawnParameters);
+
+	// Show a muzzle flash particle
+	UGameplayStatics::SpawnEmitterAttached(PrimaryMuzzleFlash, GetMesh(), "Muzzle_01");
 }
 
 bool ASCharacter::PerformAttackTrace(FHitResult& OutHitResult) const

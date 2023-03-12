@@ -51,18 +51,20 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Controls|Input Mappings")
 	class UInputMappingContext* BaseMappingContext;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Attacks")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Attacks|Projectiles")
 	TSubclassOf<class ASProjectile> PrimaryProjectileClass;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Attacks")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Attacks|Projectiles")
 	TSubclassOf<class ASProjectile> UltimateProjectileClass;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Attacks")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Attacks|Projectiles")
 	TSubclassOf<class ASProjectile> TeleportProjectileClass;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Attacks")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Attacks|Animation")
 	UAnimMontage* PrimaryAttackAnim;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Attacks")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Attacks|Animation")
 	UAnimMontage* UltimateAttackAnim;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Attacks")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Attacks|Animation")
 	UAnimMontage* TeleportAttackAnim;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Attacks|FX")
+	UParticleSystem* PrimaryMuzzleFlash;
 
 	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, class USAttributeComponent* OwningComp, float NewHealth, float Delta);
