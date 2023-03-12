@@ -87,20 +87,17 @@ void ASProjectile::DestroyProjectile()
 
 void ASProjectile::DestroyProjectile(bool PlayHitSound)
 {
-	if (!ensure(IsPendingKill()))
+	AudioComp->Stop();
+	// Play hit particle FX
+	if (HitParticleSystem != nullptr)
 	{
-		AudioComp->Stop();
-		// Play hit particle FX
-		if (HitParticleSystem != nullptr)
-		{
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticleSystem, GetActorLocation(), GetActorRotation());
-		}
-		// Play an impact sound if one is set
-		if (PlayHitSound && ImpactSound != nullptr)
-		{
-			UGameplayStatics::PlaySoundAtLocation(GetWorld(), ImpactSound, GetActorLocation(), GetActorRotation());
-		}
-		// Destroy ourselves
-		Destroy();
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticleSystem, GetActorLocation(), GetActorRotation());
 	}
+	// Play an impact sound if one is set
+	if (PlayHitSound && ImpactSound != nullptr)
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ImpactSound, GetActorLocation(), GetActorRotation());
+	}
+	// Destroy ourselves
+	Destroy();
 }

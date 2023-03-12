@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
 #include "SAttributeComponent.h"
+#include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
 #include "SCharacter.generated.h"
 
