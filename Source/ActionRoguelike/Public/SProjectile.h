@@ -20,9 +20,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
 	UParticleSystemComponent* ParticleSystemComp;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
-	UParticleSystem* HitParticleSystem;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
 	UAudioComponent* AudioComp;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="FX")
+	UParticleSystem* HitParticleSystem;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="FX")
+	TSubclassOf<UCameraShakeBase> ImpactCameraShake;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Projectile Properties")
 	float ProjectileLifetimeSeconds = 0.f;

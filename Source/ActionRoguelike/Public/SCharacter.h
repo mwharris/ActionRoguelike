@@ -65,6 +65,8 @@ protected:
 	UAnimMontage* TeleportAttackAnim;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Attacks|FX")
 	UParticleSystem* PrimaryMuzzleFlash;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Attacks|FX")
+	TSubclassOf<UCameraShakeBase> HitCameraShake;
 
 	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, class USAttributeComponent* OwningComp, float NewHealth, float Delta);

@@ -98,6 +98,11 @@ void ASProjectile::DestroyProjectile(bool PlayHitSound)
 	{
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ImpactSound, GetActorLocation(), GetActorRotation());
 	}
+	// Play a world camera shake
+	if (IsValid(ImpactCameraShake))
+	{
+		UGameplayStatics::PlayWorldCameraShake(GetWorld(), ImpactCameraShake, GetActorLocation(), 500.f, 1000.f);
+	}
 	// Destroy ourselves
 	Destroy();
 }

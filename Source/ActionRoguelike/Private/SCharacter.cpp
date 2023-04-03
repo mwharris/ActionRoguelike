@@ -223,7 +223,11 @@ void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent*
 {
 	if (Delta < 0.f)
 	{
+		// Play camera shake
+		UGameplayStatics::PlayWorldCameraShake(GetWorld(), HitCameraShake, GetActorLocation(), 0.f, 500.f);
+		// Trigger a hit flash on the character mesh 
 		GetMesh()->SetScalarParameterValueOnMaterials(FName("TimeToHit"), GetWorld()->GetTimeSeconds());
+		// Handle death
 		if (NewHealth <= 0.f && Delta < 0.f)
 		{
 			APlayerController* PC = Cast<APlayerController>(GetController());
