@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Perception/PawnSensingComponent.h"
 #include "SAICharacter.generated.h"
 
 UCLASS()
@@ -11,11 +12,16 @@ class ACTIONROGUELIKE_API ASAICharacter : public ACharacter
 
 public:
 	ASAICharacter();
+	// virtual void Tick(float DeltaTime) override;
 
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Senses")
+	UPawnSensingComponent* PawnSensingComp;
+	
 	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
 
-public:	
-	virtual void Tick(float DeltaTime) override;
+	UFUNCTION()
+	void OnSeePawn(APawn* Pawn);
 
 };
