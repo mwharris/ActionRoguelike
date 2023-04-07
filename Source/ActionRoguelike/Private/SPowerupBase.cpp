@@ -26,13 +26,13 @@ void ASPowerupBase::Interact_Implementation(APawn* InstigatorPawn)
 
 void ASPowerupBase::Activate() const
 {
-	MeshComp->SetVisibility(true);
+	RootComponent->SetVisibility(true, true);
 	MeshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
 
 void ASPowerupBase::Deactivate() const
 {
-	MeshComp->SetVisibility(false);
+	RootComponent->SetVisibility(false, true);
 	MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 

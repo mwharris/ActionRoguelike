@@ -25,7 +25,6 @@ void USBTService_CheckAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, u
 		return;
 	}
 
-	
 	const APawn* AIPawn = AIController->GetPawn();
 	if (!ensure(AIPawn))
 	{

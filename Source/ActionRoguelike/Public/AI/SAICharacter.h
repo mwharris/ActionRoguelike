@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SAttributeComponent.h"
 #include "GameFramework/Character.h"
 #include "Perception/PawnSensingComponent.h"
 #include "SAICharacter.generated.h"
@@ -15,8 +16,13 @@ public:
 	// virtual void Tick(float DeltaTime) override;
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Senses")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Components")
 	UPawnSensingComponent* PawnSensingComp;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Components")
+	USAttributeComponent* AttributeComp;
+	
+	UFUNCTION()
+	void OnHealthChanged(AActor* InstigatorActor, class USAttributeComponent* OwningComp, float NewHealth, float Delta);
 	
 	virtual void BeginPlay() override;
 	virtual void PostInitializeComponents() override;
